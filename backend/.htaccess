@@ -1,0 +1,33 @@
+# Habilitar reescrita de URL
+RewriteEngine On
+
+# Redirecionar todas as requisições para a pasta api
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ api/$1 [QSA,L]
+
+# Configurações de segurança
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Configurações PHP
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 30
+
+# Logs de erro
+php_flag log_errors On
+php_value error_log ../logs/php_errors.log
+
+# Ocultar informações do servidor
+ServerTokens Prod
+Header unset Server
+Header always unset X-Powered-By
+
+# Cache para recursos estáticos (se houver)
+<FilesMatch "\.(ico|jpg|jpeg|png|gif|css|js)$">
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+</FilesMatch>
