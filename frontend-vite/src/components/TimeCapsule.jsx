@@ -21,15 +21,42 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
     setIsSearching(true);
     
     try {
-      const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=6&q=${encodeURIComponent(query)}&type=video&key=${YOUTUBE_API_KEY}`
-      );
+      // URL correta da API do YouTube v3
+      const apiUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=6&q=${encodeURIComponent(query)}&type=video&key=${YOUTUBE_API_KEY}`;
+      
+      console.log('Buscando:', query);
+      console.log('URL da API:', apiUrl);
+      
+      const response = await fetch(apiUrl);
+      
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
       
       if (!response.ok) {
-        throw new Error('Erro na API do YouTube');
+        const errorText = await response.text();
+        console.error('Erro na resposta da API:', response.status, errorText);
+        
+        // Verificar se é problema de quota/API key
+        if (response.status === 403) {
+          throw new Error('API Key inválida ou quota esgotada');
+        } else if (response.status === 400) {
+          throw new Error('Parâmetros inválidos na requisição');
+        } else {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
       }
       
       const data = await response.json();
+      console.log('Dados recebidos da API:', data);
+      
+      if (data.error) {
+        console.error('Erro na resposta da API:', data.error);
+        throw new Error(data.error.message || 'Erro na API do YouTube');
+      }
+      
+      if (!data.items || data.items.length === 0) {
+        throw new Error('Nenhum resultado encontrado para esta busca');
+      }
       
       const results = data.items.map(item => ({
         id: item.id.videoId,
@@ -38,19 +65,23 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
         thumbnail: item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default.url
       }));
       
+      console.log('Resultados processados:', results);
       setSearchResults(results);
       
     } catch (error) {
-      console.error('Erro na busca do YouTube:', error);
-      const fallbackResults = [
+      console.error('Erro completo na busca:', error);
+      
+      // Mostrar erro específico para o usuário
+      const errorResults = [
         {
-          id: 'dQw4w9WgXcQ',
-          title: `Resultados para: ${query}`,
-          artist: 'Tente novamente',
-          thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg'
+          id: 'error',
+          title: `Erro: ${error.message}`,
+          artist: 'Verifique sua conexão ou tente novamente',
+          thumbnail: 'https://via.placeholder.com/320x180/ff0000/ffffff?text=ERRO'
         }
       ];
-      setSearchResults(fallbackResults);
+      
+      setSearchResults(errorResults);
     }
     
     setIsSearching(false);
