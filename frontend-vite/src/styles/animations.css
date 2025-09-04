@@ -1,0 +1,59 @@
+/* Animações para as partículas */
+@keyframes sparkle {
+  0% { 
+    opacity: 0; 
+    transform: scale(0) translateY(0px); 
+  }
+  50% { 
+    opacity: 1; 
+    transform: scale(1) translateY(-20px); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: scale(0) translateY(-40px); 
+  }
+}
+
+@keyframes float {
+  0%, 100% { 
+    transform: translateY(0px); 
+  }
+  50% { 
+    transform: translateY(-10px); 
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); 
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6); 
+  }
+}
+
+/* Classes para animações */
+.answer-block {
+  animation: float 3s ease-in-out infinite;
+}
+
+.answer-block:nth-child(odd) {
+  animation-delay: 0.5s;
+}
+
+.capsule-glow {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+.sparkle-particle {
+  animation: sparkle 0.8s ease-out infinite;
+}
+
+/* Transições suaves */
+.smooth-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.background-shift {
+  transition: width 3s cubic-bezier(0.4, 0, 0.2, 1);
+}
