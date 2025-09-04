@@ -22,7 +22,7 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
     
     try {
       const response = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=6&q=${encodeURIComponent(query + ' music')}&type=video&key=${YOUTUBE_API_KEY}`
+        `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=6&q=${encodeURIComponent(query)}&type=video&key=${YOUTUBE_API_KEY}`
       );
       
       if (!response.ok) {
@@ -44,10 +44,10 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
       console.error('Erro na busca do YouTube:', error);
       const fallbackResults = [
         {
-          id: 'jfKfPfyJRdk',
-          title: `${query} - Lofi Hip Hop Mix`,
-          artist: 'ChillHop Music',
-          thumbnail: 'https://img.youtube.com/vi/jfKfPfyJRdk/mqdefault.jpg'
+          id: 'dQw4w9WgXcQ',
+          title: `Resultados para: ${query}`,
+          artist: 'Tente novamente',
+          thumbnail: 'https://img.youtube.com/vi/dQw4w9WgXcQ/mqdefault.jpg'
         }
       ];
       setSearchResults(fallbackResults);
