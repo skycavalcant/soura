@@ -295,22 +295,131 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
 // Player 
 const BackgroundMusicPlayer = ({ currentMusic, onClose }) => {
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMinimized, setIsMinimized] = useState(false);
 
   if (!currentMusic) return null;
 
   return (
     <>
-      <div style={{ display: 'none' }}>
-        <iframe
-          width="0"
-          height="0"
-          src={`https://www.youtube.com/embed/${currentMusic.id}?autoplay=1&loop=1&playlist=${currentMusic.id}`}
-          frameBorder="0"
-          allow="autoplay; encrypted-media"
-          allowFullScreen
-          title="Background Music"
-        />
+      {/* Iframe invisível para o áudio */}
+      <iframe
+        width="0"
+        height="0"
+        src={`https://www.youtube.com/embed/${currentMusic.id}?autoplay=1&loop=1&playlist=${currentMusic.id}`}
+        frameBorder="0"
+        allow="autoplay; encrypted-media"
+        allowFullScreen
+        title="Background Music"
+        style={{ position: 'absolute', left: '-9999px', opacity: 0 }}
+      />
+      
+      {/* Player visual simples */}
+      <div style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        zIndex: 9999,
+        backgroundColor: 'rgba(40, 40, 40, 0.95)',
+        borderRadius: '25px',
+        padding: '8px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        
+        {/* Botão Fechar */}
+        <button
+          onClick={onClose}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'rgba(255, 255, 255, 0.8)',
+            cursor: 'pointer',
+            padding: '4px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'color 0.2s ease'
+          }}
+          onMouseOver={(e) => e.target.style.color = 'white'}
+          onMouseOut={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.8)'}
+        >
+          <X size={14} />
+        </button>
+
+        {/* Controles */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          
+          {/* Anterior */}
+          <button style={{
+            background: 'none',
+            border: 'none',
+            color: 'rgba(255, 255, 255, 0.6)',
+            cursor: 'pointer',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <ChevronLeft size={16} />
+            <ChevronLeft size={16} style={{ marginLeft: '-8px' }} />
+          </button>
+
+          {/* Play/Pause */}
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)}
+            style={{
+              background: 'white',
+              border: 'none',
+              borderRadius: '50%',
+              width: '32px',
+              height: '32px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              cursor: 'pointer',
+              transition: 'transform 0.1s ease'
+            }}
+            onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+            onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+          >
+            {isPlaying ? <Pause size={16} color="#333" /> : <Play size={16} color="#333" />}
+          </button>
+
+          {/* Próximo */}
+          <button style={{
+            background: 'none',
+            border: 'none',
+            color: 'rgba(255, 255, 255, 0.6)',
+            cursor: 'pointer',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <ChevronRight size={16} />
+            <ChevronRight size={16} style={{ marginLeft: '-8px' }} />
+          </button>
+
+        </div>
+
+        {/* Nome da música */}
+        <div style={{
+          color: 'white',
+          fontSize: '12px',
+          fontWeight: '400',
+          maxWidth: '150px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}>
+          {currentMusic.title.length > 20 ? currentMusic.title.substring(0, 20) + '...' : currentMusic.title}
+        </div>
+
+        {/* Volume */}
+        <Volume2 size={16} style={{ color: 'rgba(255, 255, 255, 0.6)' }} />
+
       </div>
     </>
   );
