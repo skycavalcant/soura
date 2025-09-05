@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight, ChevronLeft, Clock, Mail, Heart, Target, Calendar, X, Search, Play, Pause, Volume2 } from 'lucide-react';
 import PixelCapsule from './PixelCapsule.jsx';
 import AnimationSequence from './AnimationSequence.jsx';
@@ -579,7 +579,7 @@ Deus`
 
         <div style={{
           padding: '32px 24px',
-          maxHeight: '400px',
+          maxHeight: '300px',
           overflowY: 'auto'
         }}>
           <div style={{
@@ -662,11 +662,103 @@ const TimeCapsule = () => {
   
   // Estado para data customizada
   const [displayDate, setDisplayDate] = useState('');
+  
+  // Ref para manter o iframe de música persistente
+  const musicIframeRef = useRef(null);
+  const musicContainerRef = useRef(null);
 
   const { phase, backgroundShift, startAnimationSequence, resetAnimation } = useAnimationPhases();
 
+  // Criar iframe de música uma única vez
+  useEffect(() => {
+    if (currentMusic && !musicIframeRef.current) {
+      // Criar o iframe apenas uma vez
+      const iframe = document.createElement('iframe');
+      iframe.width = '0';
+      iframe.height = '0';
+      iframe.src = `https://www.youtube.com/embed/${currentMusic.id}?autoplay=1&loop=1&playlist=${currentMusic.id}`;
+      iframe.frameBorder = '0';
+      iframe.allow = 'autoplay; encrypted-media';
+      iframe.allowFullScreen = true;
+      iframe.title = 'Background Music';
+      iframe.style.cssText = 'position: absolute; left: -9999px; opacity: 0;';
+      
+      // Adicionar ao body para garantir que nunca seja removido
+      document.body.appendChild(iframe);
+      musicIframeRef.current = iframe;
+    }
+  }, [currentMusic]);
+
+  // Limpar iframe quando música for removida
+  useEffect(() => {
+    if (!currentMusic && musicIframeRef.current) {
+      document.body.removeChild(musicIframeRef.current);
+      musicIframeRef.current = null;
+    }
+  }, [currentMusic]);
+
   const currentQuestion = QUESTIONS[currentStep];
   const progress = ((currentStep + 1) / QUESTIONS.length) * 100;
+
+  // Player visual apenas (iframe é criado no useEffect)
+  const renderMusicControls = () => (
+    currentMusic ? (
+      <div style={{
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        zIndex: 9999,
+        backgroundColor: 'rgba(40, 40, 40, 0.95)',
+        borderRadius: '25px',
+        padding: '8px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)'
+      }}>
+        
+        {/* Botão Fechar */}
+        <button
+          onClick={() => setCurrentMusic(null)}
+          style={{
+            background: 'none',
+            border: 'none',
+            color: 'rgba(255, 255, 255, 0.8)',
+            cursor: 'pointer',
+            padding: '4px',
+            borderRadius: '50%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            transition: 'color 0.2s ease'
+          }}
+          onMouseOver={(e) => e.target.style.color = 'white'}
+          onMouseOut={(e) => e.target.style.color = 'rgba(255, 255, 255, 0.8)'}
+        >
+          <X size={14} />
+        </button>
+
+        {/* Nome da música */}
+        <div style={{
+          color: 'white',
+          fontSize: '12px',
+          fontWeight: '400',
+          maxWidth: '150px',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap'
+        }}>
+          {currentMusic.title.length > 20 ? currentMusic.title.substring(0, 20) + '...' : currentMusic.title}
+        </div>
+
+        {/* Volume */}
+        <Volume2 size={16} style={{ color: 'rgba(255, 255, 255, 0.6)' }} />
+
+      </div>
+    ) : null
+  );
 
   const handleAnswerChange = (questionId, value) => {
     if (questionId === 'user_email') {
@@ -1028,95 +1120,101 @@ const TimeCapsule = () => {
   // Tela de sucesso
   if (showSuccess) {
     return (
-      <div style={{ minHeight: '100vh', display: 'flex' }}>
-        <div style={{
-          width: '30%',
-          background: 'linear-gradient(135deg, #BFB584 0%, #0B3140 100%)',
-          position: 'relative'
-        }}>
-          <div style={{ position: 'absolute', top: '60px', left: '24px' }}>
-            <div style={{ color: '#e7e5e4', marginBottom: '8px' }}>
-              <Clock size={24} />
+      <>
+        {renderMusicControls()}
+        <div style={{ minHeight: '100vh', display: 'flex' }}>
+          <div style={{
+            width: '30%',
+            background: 'linear-gradient(135deg, #BFB584 0%, #0B3140 100%)',
+            position: 'relative'
+          }}>
+            <div style={{ position: 'absolute', top: '60px', left: '24px' }}>
+              <div style={{ color: '#e7e5e4', marginBottom: '8px' }}>
+                <Clock size={24} />
+              </div>
+              <h3 style={{ 
+                fontSize: '18px', 
+                fontWeight: '200', 
+                color: '#e7e5e4', 
+                letterSpacing: '0.1em',
+                margin: 0
+              }}>
+                Presente
+              </h3>
             </div>
-            <h3 style={{ 
-              fontSize: '18px', 
-              fontWeight: '200', 
-              color: '#e7e5e4', 
-              letterSpacing: '0.1em',
-              margin: 0
-            }}>
-              Presente
-            </h3>
           </div>
-        </div>
 
-        <div style={{
-          width: '70%',
-          background: 'linear-gradient(135deg, #0B3140 0%, #40131B 100%)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <div style={{ textAlign: 'center', maxWidth: '400px', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <PixelCapsule size={140} />
-            <h2 style={{ 
-              fontSize: '32px', 
-              fontWeight: '200', 
-              color: '#e7e5e4', 
-              margin: '24px 0 16px' 
-            }}>
-              Enviada com Sucesso!
-            </h2>
-            <p style={{ 
-              color: '#d6d3d1', 
-              fontWeight: '300', 
-              fontSize: '18px', 
-              lineHeight: '1.6', 
-              margin: '0 0 32px' 
-            }}>
-              Sua Soura foi criada e será entregue na data escolhida.
-              <br/>
-              <span style={{ color: '#fbbf24' }}>Suas memórias estão seguras no futuro.</span>
-            </p>
-            <button 
-              onClick={() => window.location.reload()}
-              style={{
-                padding: '12px 24px',
-                border: '1px solid #a8a29e',
-                color: '#d6d3d1',
-                background: 'transparent',
-                cursor: 'pointer',
-                borderRadius: '6px',
-                fontWeight: '300',
-                letterSpacing: '0.05em',
-                transition: 'all 0.3s ease'
-              }}
-              onMouseOver={(e) => {
-                e.target.style.borderColor = '#d97706';
-                e.target.style.color = '#fbbf24';
-              }}
-              onMouseOut={(e) => {
-                e.target.style.borderColor = '#a8a29e';
-                e.target.style.color = '#d6d3d1';
-              }}
-            >
-              Criar Nova Soura
-            </button>
+          <div style={{
+            width: '70%',
+            background: 'linear-gradient(135deg, #0B3140 0%, #40131B 100%)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <div style={{ textAlign: 'center', maxWidth: '400px', padding: '0 24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <PixelCapsule size={140} />
+              <h2 style={{ 
+                fontSize: '32px', 
+                fontWeight: '200', 
+                color: '#e7e5e4', 
+                margin: '24px 0 16px' 
+              }}>
+                Enviada com Sucesso!
+              </h2>
+              <p style={{ 
+                color: '#d6d3d1', 
+                fontWeight: '300', 
+                fontSize: '18px', 
+                lineHeight: '1.6', 
+                margin: '0 0 32px' 
+              }}>
+                Sua Soura foi criada e será entregue na data escolhida.
+                <br/>
+                <span style={{ color: '#fbbf24' }}>Suas memórias estão seguras no futuro.</span>
+              </p>
+              <button 
+                onClick={() => window.location.reload()}
+                style={{
+                  padding: '12px 24px',
+                  border: '1px solid #a8a29e',
+                  color: '#d6d3d1',
+                  background: 'transparent',
+                  cursor: 'pointer',
+                  borderRadius: '6px',
+                  fontWeight: '300',
+                  letterSpacing: '0.05em',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseOver={(e) => {
+                  e.target.style.borderColor = '#d97706';
+                  e.target.style.color = '#fbbf24';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.borderColor = '#a8a29e';
+                  e.target.style.color = '#d6d3d1';
+                }}
+              >
+                Criar Nova Soura
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 
   // Tela de animação
   if (isSubmitting) {
     return (
-      <AnimationSequence 
-        phase={phase}
-        backgroundShift={backgroundShift}
-        animatedAnswers={animatedAnswers}
-        showAnswerAnimation={showAnswerAnimation}
-      />
+      <>
+        {renderMusicControls()}
+        <AnimationSequence 
+          phase={phase}
+          backgroundShift={backgroundShift}
+          animatedAnswers={animatedAnswers}
+          showAnswerAnimation={showAnswerAnimation}
+        />
+      </>
     );
   }
 
@@ -1128,10 +1226,8 @@ const TimeCapsule = () => {
       onClose={() => setShowWelcomeModal(false)}
       onSelectVideo={setCurrentMusic}
     />
-    <BackgroundMusicPlayer 
-      currentMusic={currentMusic}
-      onClose={() => setCurrentMusic(null)}
-    />
+    {/* Controles de música sempre presentes */}
+    {renderMusicControls()}
     <div style={{ minHeight: '100vh', display: 'flex', position: 'relative' }}>
       
       {/* Erro */}
