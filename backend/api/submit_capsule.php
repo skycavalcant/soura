@@ -1,4 +1,17 @@
 <?php
+// Headers CORS diretos - garantir que sejam sempre enviados
+header('Access-Control-Allow-Origin: https://soura-five.vercel.app');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Credentials: true');
+header('Content-Type: application/json; charset=utf-8');
+
+// Responder a requests OPTIONS (preflight)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 require_once '../config/cors.php';
 require_once '../config/database.php';
 require_once '../classes/Capsule.php';
@@ -91,6 +104,10 @@ try {
     ]);
 
 } catch (Exception $e) {
+    // Garantir que os headers CORS sejam enviados mesmo com erro
+    header('Access-Control-Allow-Origin: https://soura-five.vercel.app');
+    header('Content-Type: application/json; charset=utf-8');
+    
     logDebug("Erro ao processar cápsula", [
         'error' => $e->getMessage(),
         'trace' => $e->getTraceAsString()
@@ -100,6 +117,21 @@ try {
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()
+    ]);
+} catch (Error $e) {
+    // Capturar também erros fatais
+    header('Access-Control-Allow-Origin: https://soura-five.vercel.app');
+    header('Content-Type: application/json; charset=utf-8');
+    
+    logDebug("Erro fatal", [
+        'error' => $e->getMessage(),
+        'trace' => $e->getTraceAsString()
+    ]);
+
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Erro interno do servidor'
     ]);
 }
 ?>
