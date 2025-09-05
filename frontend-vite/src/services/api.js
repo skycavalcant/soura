@@ -4,8 +4,8 @@ const getBaseURL = () => {
   // Produção: Frontend no Vercel, Backend no Railway
   if (process.env.NODE_ENV === 'production' || 
       (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app'))) {
-    // SUBSTITUA pela sua URL real do Railway
-    // return 'https://SEU-PROJETO.railway.app';
+    // link railway
+     return 'https://soura-production.up.railway.app';
   }
   
   // Desenvolvimento local: Proxy do Vite
@@ -17,10 +17,10 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 15000, // Aumentei o timeout
+  timeout: 15000, 
 });
 
-// Interceptador para tratamento de erros melhorado
+
 api.interceptors.response.use(
   (response) => response,
   (error) => {
