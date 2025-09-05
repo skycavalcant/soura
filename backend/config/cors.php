@@ -15,17 +15,26 @@ if ($isLocal) {
         'https://soura-five.vercel.app/', 
     ];
     
-    $origin = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '';
     
     // Log para debug
     error_log("Origin recebido: " . $origin);
+    error_log("HTTP_ORIGIN: " . ($_SERVER['HTTP_ORIGIN'] ?? 'não definido'));
+    error_log("HTTP_REFERER: " . ($_SERVER['HTTP_REFERER'] ?? 'não definido'));
+    error_log("HTTP_HOST: " . ($_SERVER['HTTP_HOST'] ?? 'não definido'));
     error_log("Origens permitidas: " . json_encode($allowedOrigins));
     
-    if (in_array($origin, $allowedOrigins)) {
+    // Verificar se é do Vercel (mais flexível)
+    if (strpos($origin, 'soura-five.vercel.app') !== false) {
+        header('Access-Control-Allow-Origin: https://soura-five.vercel.app');
+        error_log("CORS permitido para Vercel");
+    } else if (in_array($origin, $allowedOrigins)) {
         header('Access-Control-Allow-Origin: ' . $origin);
+        error_log("CORS permitido por lista: " . $origin);
     } else {
-        // para debug
-        error_log("Origin não permitido: " . $origin);
+        // Fallback para produção - sempre permitir Vercel
+        header('Access-Control-Allow-Origin: https://soura-five.vercel.app');
+        error_log("CORS fallback para Vercel. Origin não permitido: " . $origin);
     }
 }
 
