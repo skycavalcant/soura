@@ -659,6 +659,9 @@ const TimeCapsule = () => {
   // Estados da carta especial
   const [showSpecialLetter, setShowSpecialLetter] = useState(false);
   const [friendName, setFriendName] = useState('');
+  
+  // Estado para data customizada
+  const [displayDate, setDisplayDate] = useState('');
 
   const { phase, backgroundShift, startAnimationSequence, resetAnimation } = useAnimationPhases();
 
@@ -909,24 +912,110 @@ const TimeCapsule = () => {
         );
       
       case 'date':
+        const formatDateInput = (input) => {
+          // Remove tudo que não é número
+          const numbers = input.replace(/\D/g, '');
+          
+          // Aplica a máscara dd/mm/yyyy
+          let formatted = '';
+          
+          if (numbers.length >= 1) {
+            formatted = numbers.substring(0, 2);
+          }
+          if (numbers.length >= 3) {
+            formatted += '/' + numbers.substring(2, 4);
+          }
+          if (numbers.length >= 5) {
+            formatted += '/' + numbers.substring(4, 8);
+          }
+          
+          return formatted;
+        };
+
+        const validateAndConvertDate = (brDate) => {
+          if (brDate.length !== 10) return null;
+          
+          const [day, month, year] = brDate.split('/');
+          
+          // Validação básica
+          const dayNum = parseInt(day);
+          const monthNum = parseInt(month);
+          const yearNum = parseInt(year);
+          
+          if (dayNum < 1 || dayNum > 31) return null;
+          if (monthNum < 1 || monthNum > 12) return null;
+          if (yearNum < new Date().getFullYear()) return null;
+          
+          // Criar data e validar se é real
+          const date = new Date(yearNum, monthNum - 1, dayNum);
+          
+          if (date.getDate() !== dayNum || 
+              date.getMonth() !== monthNum - 1 || 
+              date.getFullYear() !== yearNum) {
+            return null;
+          }
+          
+          // Verificar se é data futura
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
+          
+          if (date <= today) return null;
+          
+          // Retornar no formato ISO
+          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        };
+
+        const handleDateChange = (e) => {
+          const input = e.target.value;
+          const formatted = formatDateInput(input);
+          setDisplayDate(formatted);
+          
+          // Se data está completa, validar e salvar
+          if (formatted.length === 10) {
+            const isoDate = validateAndConvertDate(formatted);
+            if (isoDate) {
+              handleAnswerChange(currentQuestion.id, isoDate);
+            }
+          }
+        };
+
+        // Sincronizar displayDate com o valor salvo
+        const currentDisplayDate = displayDate || (() => {
+          const isoDate = answers[currentQuestion.id];
+          if (isoDate) {
+            const [year, month, day] = isoDate.split('-');
+            return `${day}/${month}/${year}`;
+          }
+          return '';
+        })();
+
+        const isDateValid = currentDisplayDate.length === 10 && validateAndConvertDate(currentDisplayDate) !== null;
+
         return (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <input
-              type="date"
-              style={inputStyle}
-              value={answers[currentQuestion.id] || ''}
-              onChange={(e) => handleAnswerChange(currentQuestion.id, e.target.value)}
+              type="text"
+              placeholder="dd/mm/aaaa"
+              style={{
+                ...inputStyle,
+                borderBottomColor: currentDisplayDate && !isDateValid ? 'rgba(220, 38, 38, 0.5)' : 'rgba(120, 113, 108, 0.3)'
+              }}
+              value={currentDisplayDate}
+              onChange={handleDateChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              min={new Date().toISOString().split('T')[0]}
+              maxLength={10}
             />
             <p style={{ 
               fontSize: '14px', 
-              color: '#57534e', 
+              color: currentDisplayDate && !isDateValid ? '#dc2626' : '#57534e', 
               fontWeight: '300', 
               lineHeight: '1.5' 
             }}>
-              Escolha uma data significativa para receber suas reflexões
+              {currentDisplayDate && !isDateValid && currentDisplayDate.length === 10 
+                ? 'Data inválida ou no passado'
+                : 'Escolha uma data significativa para receber suas reflexões'
+              }
             </p>
           </div>
         );

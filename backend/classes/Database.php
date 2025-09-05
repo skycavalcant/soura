@@ -1,42 +1,23 @@
 <?php
+require_once __DIR__ . '/../config/database.php';
+
 class Database {
-    private $host = DB_HOST;
-    private $db_name = DB_NAME;
-    private $username = DB_USER;
-    private $password = DB_PASS;
-    private $charset = DB_CHARSET;
-    private $pdo;
+    private $conn;
 
     public function connect() {
-        $this->pdo = null;
-        
-        try {
-            $dsn = "mysql:host=" . $this->host . ";dbname=" . $this->db_name . ";charset=" . $this->charset;
-            
-            $options = [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
-            ];
-            
-            $this->pdo = new PDO($dsn, $this->username, $this->password, $options);
-            
-        } catch(PDOException $e) {
-            error_log("Erro de conexão com banco: " . $e->getMessage());
-            throw new Exception("Falha na conexão com o banco de dados");
-        }
-        
-        return $this->pdo;
+        return $this->getConnection();
     }
 
-    public function testConnection() {
+    public function getConnection() {
+        $this->conn = null;
         try {
-            $pdo = $this->connect();
-            return $pdo !== null;
-        } catch (Exception $e) {
-            return false;
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";port=" . DB_PORT . ";charset=" . DB_CHARSET;
+            $this->conn = new PDO($dsn, DB_USER, DB_PASS);
+            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch (PDOException $e) {
+            error_log("❌ Erro de conexão: " . $e->getMessage());
+            die("Erro ao conectar ao banco de dados.");
         }
+        return $this->conn;
     }
 }
-?>

@@ -1,25 +1,50 @@
 import axios from 'axios';
 
+const getBaseURL = () => {
+  // Produção: Frontend no Vercel, Backend no Railway
+  if (process.env.NODE_ENV === 'production' || 
+      (typeof window !== 'undefined' && window.location.hostname.includes('vercel.app'))) {
+    // SUBSTITUA pela sua URL real do Railway
+    // return 'https://SEU-PROJETO.railway.app';
+  }
+  
+  // Desenvolvimento local: Proxy do Vite
+  return '/backend/api';
+};
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: getBaseURL(),
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 10000,
+  timeout: 15000, // Aumentei o timeout
 });
 
-// Interceptador para tratamento de erros
+// Interceptador para tratamento de erros melhorado
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('Erro na API:', error);
+    console.error('Erro detalhado na API:', {
+      message: error.message,
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      url: error.config?.url,
+      baseURL: error.config?.baseURL
+    });
     
     if (error.response) {
-      throw new Error(error.response.data.message || 'Erro no servidor');
+      // Erro do servidor (4xx, 5xx)
+      const message = error.response.data?.message || 
+                     error.response.data?.error || 
+                     `Erro ${error.response.status}: ${error.response.statusText}`;
+      throw new Error(message);
     } else if (error.request) {
-      throw new Error('Sem conexão com o servidor');
+      // Sem resposta do servidor
+      throw new Error('Servidor não está respondendo. Verifique sua conexão.');
     } else {
-      throw new Error('Erro na requisição');
+      // Erro na configuração da requisição
+      throw new Error('Erro na configuração da requisição');
     }
   }
 );
@@ -28,6 +53,8 @@ export const timeCapsuleAPI = {
   async submitCapsule(capsuleData) {
     try {
       console.log('Enviando dados da cápsula:', capsuleData);
+      console.log('URL completa:', `${getBaseURL()}/submit_capsule.php`);
+      
       const response = await api.post('/submit_capsule.php', capsuleData);
       return response.data;
     } catch (error) {
@@ -38,6 +65,7 @@ export const timeCapsuleAPI = {
 
   async healthCheck() {
     try {
+      console.log('Verificando saúde da API:', `${getBaseURL()}/health.php`);
       const response = await api.get('/health.php');
       return response.data;
     } catch (error) {

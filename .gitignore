@@ -1,0 +1,46 @@
+# Variáveis de ambiente - NUNCA COMITAR
+.env
+.env.local
+.env.production
+.env.development
+
+# Dependências do Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependências do PHP
+/vendor/
+
+# Build do Vite
+/frontend-vite/dist/
+/frontend-vite/build/
+
+# Logs
+*.log
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporários
+/tmp/
+/temp/
+
+# Banco de dados local
+*.sqlite
+*.db
+
+# Uploads/arquivos temporários
+/uploads/
+/storage/
+
+# Cache
+.cache/
