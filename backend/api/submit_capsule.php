@@ -1,5 +1,5 @@
 <?php
-// Headers CORS diretos - garantir que sejam sempre enviados
+// Headers CORS diretos - SEMPRE enviados primeiro
 header('Access-Control-Allow-Origin: https://soura-five.vercel.app');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once '../config/cors.php';
+// Incluir arquivos necessários
 require_once '../config/database.php';
 require_once '../classes/Capsule.php';
 

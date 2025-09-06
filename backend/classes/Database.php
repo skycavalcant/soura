@@ -20,4 +20,19 @@ class Database {
         }
         return $this->conn;
     }
+
+    public function testConnection() {
+        try {
+            $connection = $this->getConnection();
+            if ($connection) {
+                // Testar com uma query simples
+                $stmt = $connection->query("SELECT 1");
+                return $stmt !== false;
+            }
+            return false;
+        } catch (Exception $e) {
+            error_log("❌ Teste de conexão falhou: " . $e->getMessage());
+            return false;
+        }
+    }
 }
