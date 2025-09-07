@@ -6,3 +6,6 @@ cmd = "php -S 0.0.0.0:$PORT -t ."
 
 [variables]
 PHP_VERSION = "8.2"
+
+[providers.php]
+extensions = ["pdo", "pdo_mysql", "mysqli"]
