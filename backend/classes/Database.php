@@ -11,11 +11,11 @@ class Database {
         
         try {
             // Usar variáveis de ambiente do Railway
-            $host = getenv('DB_HOST') ?: 'localhost';
-            $dbname = getenv('DB_DATABASE') ?: 'railway';
-            $port = getenv('DB_PORT') ?: '32139';  // CORRIGIDO: porta do Railway
-            $username = getenv('DB_USERNAME') ?: 'root';
-            $password = getenv('DB_PASSWORD') ?: '';
+            $host = getenv('DB_HOST');
+            $dbname = getenv('DB_DATABASE');
+            $port = getenv('DB_PORT');
+            $username = getenv('DB_USERNAME');
+            $password = getenv('DB_PASSWORD');
             $charset = 'utf8mb4';
             
             $dsn = "mysql:host={$host};dbname={$dbname};port={$port};charset={$charset}";
