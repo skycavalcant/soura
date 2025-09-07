@@ -3,7 +3,7 @@
     "description": "Soura Time Capsule Backend",
     "type": "project",
     "require": {
-        "php": ">=7.2",
+        "php": "^8.2",
         "phpmailer/phpmailer": "^6.10"
     },
     "autoload": {
