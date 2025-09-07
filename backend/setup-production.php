@@ -1,8 +1,4 @@
 <?php
-/**
- * Setup completo do banco de dados para Railway
- * Acesse via: https://sua-url-railway.com/backend/setup-production.php
- */
 
 header('Content-Type: text/html; charset=utf-8');
 header("Access-Control-Allow-Origin: *");
@@ -29,15 +25,15 @@ echo "<h1>🚀 Setup Banco de Dados - Railway</h1>";
 try {
     echo "<div class='info'>📋 Iniciando setup do banco de dados...</div><br>";
     
-    // Mostrar configurações (sem senha)
-    echo "<h2>🔧 Configurações Detectadas</h2>";
-    echo "<table>";
-    echo "<tr><th>Variável</th><th>Valor</th></tr>";
-    echo "<tr><td>DB_HOST</td><td>" . (defined('DB_HOST') ? DB_HOST : 'NÃO DEFINIDO') . "</td></tr>";
-    echo "<tr><td>DB_NAME</td><td>" . (defined('DB_NAME') ? DB_NAME : 'NÃO DEFINIDO') . "</td></tr>";
-    echo "<tr><td>DB_USER</td><td>" . (defined('DB_USER') ? DB_USER : 'NÃO DEFINIDO') . "</td></tr>";
-    echo "<tr><td>DB_PORT</td><td>" . (defined('DB_PORT') ? DB_PORT : 'NÃO DEFINIDO') . "</td></tr>";
-    echo "</table>";
+// Mostrar configurações (sem senha)
+echo "<h2>🔧 Configurações Detectadas</h2>";
+echo "<table>";
+echo "<tr><th>Variável</th><th>Valor</th></tr>";
+echo "<tr><td>DB_HOST</td><td>" . (getenv('DB_HOST') ?: 'NÃO DEFINIDO') . "</td></tr>";
+echo "<tr><td>DB_DATABASE</td><td>" . (getenv('DB_DATABASE') ?: 'NÃO DEFINIDO') . "</td></tr>";
+echo "<tr><td>DB_USERNAME</td><td>" . (getenv('DB_USERNAME') ?: 'NÃO DEFINIDO') . "</td></tr>";
+echo "<tr><td>DB_PORT</td><td>" . (getenv('DB_PORT') ?: 'NÃO DEFINIDO') . "</td></tr>";
+echo "</table>";
     
     // Tentar conectar
     echo "<h2>🔌 Testando Conexão</h2>";
