@@ -6,22 +6,30 @@ require_once '../classes/Capsule.php';
 
 try {
     $database = new Database();
-    $isConnected = $database->testConnection();
+    $conn = $database->connect();
     
-    if (!$isConnected) {
-        throw new Exception('Falha na conexão com banco de dados');
-    }
-
     $capsule = new Capsule();
     $stats = $capsule->getStats();
+    
+    $stmt = $conn->query("SELECT VERSION() as mysql_version");
+    $version = $stmt->fetch();
 
     http_response_code(200);
     echo json_encode([
         'success' => true,
         'status' => 'healthy',
         'timestamp' => date('Y-m-d H:i:s'),
-        'database' => 'connected',
-        'stats' => $stats
+        'database' => [
+            'connected' => true,
+            'host' => DB_HOST,
+            'name' => DB_NAME,
+            'version' => $version['mysql_version']
+        ],
+        'stats' => $stats,
+        'environment' => [
+            'is_railway' => isset($_ENV['RAILWAY_PRIVATE_DOMAIN']),
+            'php_version' => PHP_VERSION
+        ]
     ]);
 
 } catch (Exception $e) {

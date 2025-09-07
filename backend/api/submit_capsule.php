@@ -1,6 +1,6 @@
 <?php
-// Headers CORS diretos - SEMPRE enviados primeiro
-header('Access-Control-Allow-Origin: https://soura-five.vercel.app');
+// Permitir acesso do frontend hospedado no Vercel
+header("Access-Control-Allow-Origin: https://soura-five.vercel.app");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
 header('Access-Control-Allow-Credentials: true');
@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// Incluir arquivos necessários
+require_once '../config/cors.php';
 require_once '../config/database.php';
 require_once '../classes/Capsule.php';
 
