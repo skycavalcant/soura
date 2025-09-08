@@ -166,6 +166,7 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
               Use fone para melhor experiência e escolha uma música que te inspire enquanto responde.
             </p>
 
+            <div style={{ display: "flex", justifyContent: "center" }}>
             <div style={{ position: 'relative', width: 'center', maxWidth: "400px", minWidth: "100px" }}>
               <input
                 type="text"
@@ -208,6 +209,7 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
               >
                 🔍
               </button>
+            </div>
             </div>
 
             {searchResults.length > 0 && (
