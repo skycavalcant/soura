@@ -1,5 +1,4 @@
 <?php
-// CORS simplificado e eficiente
 
 // Detectar ambiente baseado no host
 $isDevelopment = isset($_SERVER['HTTP_HOST']) && 

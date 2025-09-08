@@ -178,7 +178,7 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
                   maxWidth: "400px",
                   minWidth: "100px",
                   height: "30px",
-                  padding: '4px 40px 4px 15px',
+                  padding: '4px 35px 4px 15px',
                   border: 'none',
                   borderRadius: '50px',
                   fontSize: '14px',
@@ -192,21 +192,22 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
                 disabled={isSearching || !searchQuery.trim()}
                 style={{
                   position: 'absolute',
-                  right: '5px',
+                  right: '8px',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  padding: '6px',
+                  padding: '4px',
                   backgroundColor: isSearching ? '#061633ff' : '#83848502',
                   color: '#110c08ff',
                   border: 'none',
                   borderRadius: '50%',
-                  width: '30px',
-                  height: '30px',
+                  width: '22px',
+                  height: '22px',
                   cursor: isSearching ? 'not-allowed' : 'pointer',
-                  fontSize: '14px',
+                  fontSize: '12px',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  flexShrink: 0
                 }}
               >
                 <Search size={14} />
@@ -481,7 +482,7 @@ Com todo o meu amor,
 Deus`
       },
       'monica': {
-        title: 'CArta de Deus, para Monica',
+        title: 'Carta de Deus, para Monica',
         content: `Minha querida Mônica,
 
 Eu vejo o quanto o seu coração é cheio de carinho e de amor. Sei o quanto a ausência do seu pai tem doído e sei o quanto ele significava para você. Como filha mais velha, você guardava com ele uma ligação especial, única, que deixou marcas profundas em sua alma.
