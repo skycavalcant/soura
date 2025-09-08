@@ -166,7 +166,7 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
               Use fone para melhor experiência e escolha uma música que te inspire enquanto responde.
             </p>
 
-            <div style={{ position: 'relative', width: 'center', marginBottom: '20px' }}>
+            <div style={{ position: 'relative', width: 'center', maxWidth: "400px", minWidth: "100px" }}>
               <input
                 type="text"
                 placeholder=" Dê preferencia a algo emotivo..."
@@ -175,8 +175,6 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
                 onKeyPress={(e) => e.key === 'Enter' && searchYouTubeMusic(searchQuery)}
                 style={{
                   width: "100%",
-                  maxWidth: "400px",
-                  minWidth: "100px",
                   height: "30px",
                   padding: '4px 35px 4px 15px',
                   border: 'none',
@@ -192,9 +190,9 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
                 disabled={isSearching || !searchQuery.trim()}
                 style={{
                   position: 'absolute',
-                  right: '5px',
-                  top: '3px',
-                  padding: '2px',
+                  right: "12px",
+                  top: "50%",
+                  transform: "translateY(-50%)",
                   backgroundColor: 'transparent',
                   color: '#110c08ff',
                   border: 'none',
@@ -202,14 +200,13 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
                   width: '24px',
                   height: '24px',
                   cursor: isSearching ? 'not-allowed' : 'pointer',
-                  fontSize: '12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   opacity: isSearching ? 0.5 : 1
                 }}
               >
-                <Search size={14} />
+                🔍
               </button>
             </div>
 
