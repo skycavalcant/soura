@@ -53,9 +53,9 @@ export const timeCapsuleAPI = {
   async submitCapsule(capsuleData) {
     try {
       console.log('Enviando dados da cápsula:', capsuleData);
-      console.log('URL completa:', `${getBaseURL()}/submit_capsule.php`);
+      console.log('URL completa:', `${getBaseURL()}/api/submit_capsule.php`);
       
-      const response = await api.post('/submit_capsule.php', capsuleData);
+      const response = await api.post('/api/submit_capsule.php', capsuleData);
       return response.data;
     } catch (error) {
       console.error('Erro ao enviar cápsula:', error);
@@ -65,8 +65,8 @@ export const timeCapsuleAPI = {
 
   async healthCheck() {
     try {
-      console.log('Verificando saúde da API:', `${getBaseURL()}/health.php`);
-      const response = await api.get('/health.php');
+      console.log('Verificando saúde da API:', `${getBaseURL()}/api/health.php`);
+      const response = await api.get('/api/health.php');
       return response.data;
     } catch (error) {
       console.error('Erro no health check:', error);
