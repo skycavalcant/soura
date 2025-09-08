@@ -192,22 +192,21 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
                 disabled={isSearching || !searchQuery.trim()}
                 style={{
                   position: 'absolute',
-                  right: '8px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  padding: '4px',
-                  backgroundColor: isSearching ? '#061633ff' : '#83848502',
+                  right: '5px',
+                  top: '3px',
+                  padding: '2px',
+                  backgroundColor: 'transparent',
                   color: '#110c08ff',
                   border: 'none',
                   borderRadius: '50%',
-                  width: '22px',
-                  height: '22px',
+                  width: '24px',
+                  height: '24px',
                   cursor: isSearching ? 'not-allowed' : 'pointer',
                   fontSize: '12px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  flexShrink: 0
+                  opacity: isSearching ? 0.5 : 1
                 }}
               >
                 <Search size={14} />
