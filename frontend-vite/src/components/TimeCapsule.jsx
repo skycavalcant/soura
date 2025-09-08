@@ -163,7 +163,7 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
               então seja sincero — você está respondendo a si mesmo.
             </p>
             <p style={{ margin: '0px 10px 20px' }}>
-              Escolha uma música que te inspire enquanto responde.
+              Use fone para melhor experiência e escolha uma música que te inspire enquanto responde.
             </p>
 
             <div style={{ position: 'relative', width: 'center', marginBottom: '20px' }}>
