@@ -178,7 +178,7 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
                   maxWidth: "400px",
                   minWidth: "100px",
                   height: "30px",
-                  padding: '4px 10px',
+                  padding: '4px 40px 4px 15px',
                   border: 'none',
                   borderRadius: '50px',
                   fontSize: '14px',
@@ -192,16 +192,21 @@ const WelcomeModal = ({ isOpen, onClose, onSelectVideo }) => {
                 disabled={isSearching || !searchQuery.trim()}
                 style={{
                   position: 'absolute',
-                  right: '80px',
-                  top: '10%',
-                  padding: '0px 10px',
+                  right: '5px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  padding: '6px',
                   backgroundColor: isSearching ? '#061633ff' : '#83848502',
                   color: '#110c08ff',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: '50%',
+                  width: '30px',
                   height: '30px',
                   cursor: isSearching ? 'not-allowed' : 'pointer',
-                  fontSize: '14px'
+                  fontSize: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
               >
                 <Search size={14} />
