@@ -10,16 +10,10 @@ class Database {
         $this->conn = null;
         
         try {
-            // Usar variáveis de ambiente do Railway
-            $host = getenv('DB_HOST');
-            $dbname = getenv('DB_DATABASE');
-            $port = getenv('DB_PORT');
-            $username = getenv('DB_USERNAME');
-            $password = getenv('DB_PASSWORD');
-            $charset = 'utf8mb4';
+            require_once __DIR__ . '/../config/database.php';
             
-            $dsn = "mysql:host={$host};dbname={$dbname};port={$port};charset={$charset}";
-            $this->conn = new PDO($dsn, $username, $password);
+            $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";port=" . DB_PORT . ";charset=" . DB_CHARSET;
+            $this->conn = new PDO($dsn, DB_USER, DB_PASS);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
         } catch (PDOException $e) {

@@ -57,21 +57,8 @@ try {
         throw new Exception('Email é obrigatório');
     }
 
-    if (!filter_var($data['user_email'], FILTER_VALIDATE_EMAIL)) {
-        throw new Exception('Email inválido');
-    }
-
     if (empty($data['delivery_date'])) {
         throw new Exception('Data de entrega é obrigatória');
-    }
-
-    // validar data futura
-    $deliveryDate = new DateTime($data['delivery_date']);
-    $today = new DateTime();
-    $today->setTime(0, 0, 0); // zerar horas
-    
-    if ($deliveryDate <= $today) {
-        throw new Exception('A data de entrega deve ser no futuro');
     }
 
     $capsuleData = $data; // mantém métodos originais

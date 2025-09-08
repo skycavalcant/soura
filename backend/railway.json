@@ -1,7 +1,7 @@
 {
   "name": "soura-backend",
   "runtime": "php",
-  "start": "php -S 0.0.0.0:$PORT -t public",
+  "start": "php -S 0.0.0.0:$PORT -t .",
   "build": {
     "command": "composer install --no-dev --optimize-autoloader"
   }
